@@ -1,0 +1,99 @@
+    /*
+    Flaticon icon font: Flaticon
+    Creation date: 22/06/2016 15:11
+    */
+
+    @font-face {
+  font-family: "Flaticon";
+  src: url("./Flaticon.eot");
+  src: url("./Flaticon.eot?#iefix") format("embedded-opentype"),
+       url("./Flaticon.woff") format("woff"),
+       url("./Flaticon.ttf") format("truetype"),
+       url("./Flaticon.svg#Flaticon") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  @font-face {
+    font-family: "Flaticon";
+    src: url("./Flaticon.svg#Flaticon") format("svg");
+  }
+}
+
+    .fi:before{
+        display: inline-block;
+  font-family: "Flaticon";
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  line-height: 1;
+  text-decoration: inherit;
+  text-rendering: optimizeLegibility;
+  text-transform: none;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  font-smoothing: antialiased;
+    }
+
+    .flaticon-4x4-car-side-view:before { content: "\f100"; }
+.flaticon-car-side-view:before { content: "\f101"; }
+.flaticon-car-side-view-1:before { content: "\f102"; }
+.flaticon-car-side-view-10:before { content: "\f103"; }
+.flaticon-car-side-view-11:before { content: "\f104"; }
+.flaticon-car-side-view-12:before { content: "\f105"; }
+.flaticon-car-side-view-13:before { content: "\f106"; }
+.flaticon-car-side-view-2:before { content: "\f107"; }
+.flaticon-car-side-view-3:before { content: "\f108"; }
+.flaticon-car-side-view-4:before { content: "\f109"; }
+.flaticon-car-side-view-5:before { content: "\f10a"; }
+.flaticon-car-side-view-6:before { content: "\f10b"; }
+.flaticon-car-side-view-7:before { content: "\f10c"; }
+.flaticon-car-side-view-8:before { content: "\f10d"; }
+.flaticon-car-side-view-9:before { content: "\f10e"; }
+.flaticon-car-with-roof-rack-side-view:before { content: "\f10f"; }
+.flaticon-coach-side-view:before { content: "\f110"; }
+.flaticon-convertible-car-side-view:before { content: "\f111"; }
+.flaticon-convertible-car-side-view-1:before { content: "\f112"; }
+.flaticon-pick-up-side-view:before { content: "\f113"; }
+.flaticon-pick-up-truck-side-view:before { content: "\f114"; }
+.flaticon-pick-up-truck-side-view-1:before { content: "\f115"; }
+.flaticon-sport-car-side-view:before { content: "\f116"; }
+.flaticon-sport-car-sideview:before { content: "\f117"; }
+.flaticon-tractor-side-view:before { content: "\f118"; }
+.flaticon-truck-side-view:before { content: "\f119"; }
+.flaticon-truck-side-view-1:before { content: "\f11a"; }
+.flaticon-van-side-view:before { content: "\f11b"; }
+.flaticon-van-side-view-1:before { content: "\f11c"; }
+.flaticon-van-side-view-2:before { content: "\f11d"; }
+    
+    $font-Flaticon-4x4-car-side-view: "\f100";
+    $font-Flaticon-car-side-view: "\f101";
+    $font-Flaticon-car-side-view-1: "\f102";
+    $font-Flaticon-car-side-view-10: "\f103";
+    $font-Flaticon-car-side-view-11: "\f104";
+    $font-Flaticon-car-side-view-12: "\f105";
+    $font-Flaticon-car-side-view-13: "\f106";
+    $font-Flaticon-car-side-view-2: "\f107";
+    $font-Flaticon-car-side-view-3: "\f108";
+    $font-Flaticon-car-side-view-4: "\f109";
+    $font-Flaticon-car-side-view-5: "\f10a";
+    $font-Flaticon-car-side-view-6: "\f10b";
+    $font-Flaticon-car-side-view-7: "\f10c";
+    $font-Flaticon-car-side-view-8: "\f10d";
+    $font-Flaticon-car-side-view-9: "\f10e";
+    $font-Flaticon-car-with-roof-rack-side-view: "\f10f";
+    $font-Flaticon-coach-side-view: "\f110";
+    $font-Flaticon-convertible-car-side-view: "\f111";
+    $font-Flaticon-convertible-car-side-view-1: "\f112";
+    $font-Flaticon-pick-up-side-view: "\f113";
+    $font-Flaticon-pick-up-truck-side-view: "\f114";
+    $font-Flaticon-pick-up-truck-side-view-1: "\f115";
+    $font-Flaticon-sport-car-side-view: "\f116";
+    $font-Flaticon-sport-car-sideview: "\f117";
+    $font-Flaticon-tractor-side-view: "\f118";
+    $font-Flaticon-truck-side-view: "\f119";
+    $font-Flaticon-truck-side-view-1: "\f11a";
+    $font-Flaticon-van-side-view: "\f11b";
+    $font-Flaticon-van-side-view-1: "\f11c";
+    $font-Flaticon-van-side-view-2: "\f11d";
