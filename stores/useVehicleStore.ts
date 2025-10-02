@@ -1,6 +1,7 @@
 import { create } from "zustand";
 
 interface Vehicle {
+  slug: string;
   vehicle_id: string;
   make: string;
   model: string;
@@ -13,6 +14,7 @@ interface Vehicle {
   drive: string | null;
   fuel: string;
   price: number;
+  price_usd: number;
   body_type_name: string;
   mileage: number;
   mileage_unit: string;
@@ -34,24 +36,34 @@ interface VehicleState {
   loading: boolean;
   error: string | null;
 
-  // Pagination state from backend
+  // Pagination
   currentPage: number;
   totalPages: number;
   perPage: number;
   total: number;
 
-  fetchVehicles: (page?: number) => Promise<void>;
-  fetchVehicleById: (vehicle_id: string) => Promise<void>;
-  setPage: (page: number) => Promise<void>;
-  clearVehicle: () => void;
-  searchVehicles: (params: {
+  // Actions
+  getVehicles: (params?: {
     query?: string;
     make?: string;
     model?: string;
+    min_price?: number | string;
+    max_price?: number | string;
+    body_type?: string;
+    fuel_type?: string;
     year?: string;
     colour?: string;
+    sort_by?: string;
+    vehicle_type?: string;
     page?: number;
+    currency?: "USD" | "JPY";
   }) => Promise<void>;
+
+  fetchVehicleById: (slug: string) => Promise<void>;
+  setPage: (page: number) => Promise<void>;
+  clearVehicle: () => void;
+  setVehicles: (vehicles: Vehicle[]) => void;
+  setVehicle: (vehicle: Vehicle | null) => void;
 }
 
 export const useVehicleStore = create<VehicleState>((set, get) => ({
@@ -64,114 +76,103 @@ export const useVehicleStore = create<VehicleState>((set, get) => ({
   totalPages: 1,
   total: 0,
 
-  /**
-   * Fetch paginated vehicles from API
-   */
-  fetchVehicles: async (page = 1) => {
+  setVehicles: (vehicles) => set({ vehicles }),
+  setVehicle: (vehicle) => set({ vehicle }),
+
+  getVehicles: async (params = {}) => {
+    if (get().loading) return; // prevent double calls
     set({ loading: true, error: null });
 
     try {
       const { perPage } = get();
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE}/v1/public/vehicles?page=${page}&per_page=${perPage}`,
-        { cache: "no-store" }
-      );
+      const {
+        query = "",
+        make = "",
+        model = "",
+        body_type = "",
+        fuel_type = "",
+        year = "",
+        colour = "",
+        min_price = "",
+        max_price = "",
+        sort_by = "",
+        vehicle_type = "",
+        page = 1,
+        currency = "USD",
+      } = params;
 
-      if (!res.ok) throw new Error(`Failed to fetch vehicles: ${res.status}`);
-      const data = await res.json();
-
-      set({
-        vehicles: data.data || [],
-        currentPage: Array.isArray(data.meta.current_page)
-          ? data.meta.current_page[0]
-          : data.meta.current_page,
-        totalPages: Array.isArray(data.meta.last_page)
-          ? data.meta.last_page[0]
-          : data.meta.last_page,
-        perPage: Array.isArray(data.meta.per_page)
-          ? data.meta.per_page[0]
-          : data.meta.per_page,
-        total: Array.isArray(data.meta.total)
-          ? data.meta.total[0]
-          : data.meta.total,
-        loading: false,
-      });
-    } catch (error: any) {
-      set({ error: error.message || "Something went wrong", loading: false });
-    }
-  },
-
-  /**
-   * Go to a specific page
-   */
-  setPage: async (page: number) => {
-    const { totalPages, fetchVehicles } = get();
-    if (page < 1 || page > totalPages) return;
-    await fetchVehicles(page);
-  },
-
-  /**
-   * Fetch single vehicle details by ID
-   */
-  fetchVehicleById: async (vehicle_id: string) => {
-    set({ loading: true, error: null });
-
-    try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE}/v1/public/vehicles/${vehicle_id}`,
-        { cache: "no-store" }
-      );
-
-      if (!res.ok) throw new Error(`Failed to fetch vehicle: ${res.status}`);
-      const data = await res.json();
-
-      set({ vehicle: data.data, loading: false });
-    } catch (error: any) {
-      set({ error: error.message || "Something went wrong", loading: false });
-    }
-  },
-
-  /**
-   * Search vehicles with filters (NEW)
-   */
-  searchVehicles: async ({ query = "", make = "", model = "", year = "", colour = "", page = 1 }) => {
-    set({ loading: true, error: null });
-
-    try {
-      const { perPage } = get();
-      const params = new URLSearchParams({
-        query,
-        make,
-        model,
-        year,
-        colour,
+      const queryParams = new URLSearchParams({
+        ...(query && { query }),
+        ...(make && { make }),
+        ...(model && { model }),
+        ...(body_type && { body_type }),
+        ...(fuel_type && { fuel_type }),
+        ...(year && { year }),
+        ...(colour && { colour }),
+        ...(min_price && { min_price: String(min_price) }),
+        ...(max_price && { max_price: String(max_price) }),
+        ...(sort_by && { sort_by }),
+        ...(vehicle_type && { vehicle_type }),
+        ...(currency && { currency }),
         page: String(page),
         per_page: String(perPage),
       });
 
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE}/v1/public/vehicles?${params.toString()}`,
+        `${process.env.NEXT_PUBLIC_API_BASE}/v1/public/vehicles?${queryParams.toString()}`,
         { cache: "no-store" }
       );
 
-      if (!res.ok) throw new Error(`Failed to search vehicles: ${res.status}`);
-      const data = await res.json();
+      if (!res.ok) throw new Error(`Failed to fetch vehicles: ${res.status}`);
+      const json = await res.json();
+
+      const list = json.data?.data || [];
+      const meta = json.data?.meta || {};
 
       set({
-        vehicles: data.data.data || [],
-        currentPage: data.data.meta?.current_page || 1,
-        totalPages: data.data.meta?.last_page || 1,
-        perPage: data.data.meta?.per_page || perPage,
-        total: data.data.meta?.total || 0,
+        vehicles: list,
+        currentPage: meta.current_page || 1,
+        totalPages: meta.last_page || 1,
+        perPage: meta.per_page || perPage,
+        total: meta.total || 0,
         loading: false,
       });
     } catch (error: any) {
-      set({ error: error.message || "Search failed", loading: false });
+      set({
+        error: error.message || "Failed to fetch vehicles",
+        loading: false,
+      });
     }
   },
 
-  /**
-   * Clear vehicle details
-   */
+// In your vehicle store, update the setPage method:
+setPage: async (page: number) => {
+  const { totalPages, getVehicles } = get();
+  if (page < 1 || page > totalPages) return;
+  
+  // ✅ Immediately update the current page in store for UI responsiveness
+  set({ currentPage: page });
+  
+  // Get current filters from URL or store state to maintain them
+  await getVehicles({ page });
+},
+  fetchVehicleById: async (slug: string) => {
+    set({ loading: true, error: null });
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE}/v1/public/vehicles/${slug}`,
+        { cache: "no-store" }
+      );
+      if (!res.ok) throw new Error(`Failed to fetch vehicle: ${res.status}`);
+      const data = await res.json();
+      set({ vehicle: data.data, loading: false });
+    } catch (error: any) {
+      set({
+        error: error.message || "Something went wrong",
+        loading: false,
+      });
+    }
+  },
+
   clearVehicle: () => set({ vehicle: null }),
 }));

@@ -3,14 +3,14 @@
 import Banner from "../../components/Banner";
 import AboutUs from "../../components/AboutUs";
 import PopularBodyTypes from "../../components/PopularBodyTypes";
-import LatestTrucks from "../../components/LatestTrucks";
+import LatestVehicles from "../../components/LatestVehicles";
 
 export default function HomePage() {
   return (
     <>
       {/* ✅ Components */}
       <Banner />
-      <LatestTrucks />
+      <LatestVehicles />
       <AboutUs />
       <PopularBodyTypes />
       

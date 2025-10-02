@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useState } from "react";
 
 const CACHE_KEY = "exchange_rate_usd_jpy";

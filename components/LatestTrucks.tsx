@@ -27,16 +27,16 @@ import { useVehicleStore } from "../stores/useVehicleStore";
 const MotionBox = motion(Box);
 
 export default function LatestTrucks() {
-  const { vehicles, loading, fetchVehicles } = useVehicleStore();
+  const { vehicles, loading, getVehicles } = useVehicleStore();
 
   useEffect(() => {
-    if (vehicles.length === 0) fetchVehicles();
-  }, [fetchVehicles, vehicles.length]);
+    if (vehicles.length === 0) getVehicles();
+  }, [getVehicles, vehicles.length]);
 
   // ✅ Filter Trucks from 2024 onwards
   const latestVehicles = useMemo(() => {
     return vehicles.filter(
-      (v) => Number(v.year) >= 2024 && Number(v.vehicle_type) === 2
+      (v) => Number(v.vehicle_type) === 2
     );
   }, [vehicles]);
 
